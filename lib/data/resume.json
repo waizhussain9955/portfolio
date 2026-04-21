@@ -1,0 +1,247 @@
+{
+  "name": "WAIZ HUSSAIN",
+  "title": "FULL STACK | AI BUILDER | AUTONOMOUS SYSTEMS DEVELOPER",
+  "about": "Full Stack Developer and AI Builder with hands-on experience in designing, developing, and deploying real-world applications across web, mobile, and AI domains. Specialized in building Autonomous Systems, SaaS products, and offline-first AI applications using modern development stacks and AI-assisted workflows. Strong understanding of system architecture, API integrations, and scalable design patterns. Capable of transforming ideas into fully functional production-ready products including complete ecosystems (web + mobile + tools + automation).",
+  "contact": {
+    "email": "waizhussain9955@gmail.com",
+    "phone": "+92-3272051549",
+    "WhatsApp": "+92-3272051549",
+    "github": "https://github.com/waizhussain9955",
+    "linkedin": "https://www.linkedin.com/in/waiz-hussain-6750392ba",
+    "location": "Pakistan"
+  },
+  "skills": [
+    "JavaScript (ES6+)",
+    "Dart (Flutter)",
+    "Python",
+    "PHP",
+    "SQL",
+    "HTML5",
+    "CSS3",
+    "Bootstrap",
+    "Tailwind CSS",
+    "React.js",
+    "Next.js",
+    "Node.js",
+    "mongodb",
+    "Express.js",
+    "Flutter",
+    "Prompt Engineering",
+    "Vibe Coding",
+    "MCP (Model Context Protocol)",
+    "AI Chatbot Systems",
+    "Gemini API Integration",
+    "OCR Systems",
+    "Cursor AI Editor",
+    "Windsurf IDE",
+    "Qoder",
+    "CLI-based AI workflows",
+    "VS Code",
+    "Android Studio",
+    "Postman",
+    "MySQL",
+    "NoSQL",
+    "Neon",
+    "Supabase",
+    "Firebase",
+    "Autonomous Website Development",
+    "Offline-first architecture",
+    "API Integration",
+    "System Architecture",
+    "SaaS Development"
+  ],
+  "experience": [
+    {
+      "role": "Frontend Developer",
+      "company": "NexGenTeck",
+      "live project":"nexgenteck.com",
+      "duration": "Dec 2025 - March 2026",
+      "details": [
+        "Developed scalable UI using React.js & Next.js",
+        "Integrated frontend with backend APIs",
+        "Optimized performance and code structure",
+        "Converted UI/UX designs into production-ready code"
+      ]
+    },
+    {
+      "role": "Freelance Developer",
+      "company": "Self-Employed",
+      "duration": "Ongoing",
+      "details": [
+        "Built client-based Flutter apps",
+        "Developed responsive websites",
+        "Created AI chatbot systems",
+        "Customized and improved existing projects"
+      ]
+    }
+  ],
+  "education": [
+    "ADSE - Advance Diploma in Software Engineering (Aptech Ongoing)",
+    "Intermediate (Govt College)",
+    "Agentic AI (Governor Initiative - Ongoing)"
+  ],
+  "current_focus": [
+    "Autonomous AI systems",
+    "SaaS product development",
+    "AI automation workflows",
+    "Cost-efficient AI solutions",
+    "Scalable architecture design"
+  ],
+  "strengths": [
+    "Strong problem-solving mindset",
+    "Real-world product development experience",
+    "Fast learner & self-driven",
+    "Ability to build complete systems end-to-end"
+  ],
+  "projects":
+  [
+    
+    {
+      "title": "TIKTOK DOWNLOADER - FLAGSHIP SAAS",
+      "description": "A complete SaaS ecosystem built from scratch for downloading TikTok videos efficiently. Features video downloading without watermark, bulk downloader system, fast processing engine, and clean UI. Full platform coverage: web application, mobile app, plugin/extension system.",
+      "tech_stack": ["Next.js", "Node.js", "Express.js", "API Integration", "Scalable Architecture"],
+      "live_link": "https://tik-tokdownloader.xyz",
+      "github_link": "https://github.com/waizhussain9955/tiktok-downloader",
+      "image_path": "/public/mockup/tiktok-web-downloader.png"
+    },{
+  "title": "JEWELRY STORE WEBSITE",
+  "description": "Modern aur elegant jewelry showcase website jo premium products ko visually appealing tareeke se present karti hai. Website ka focus clean UI, smooth user experience aur high-end brand feel create karna hai.",
+  "features": [
+    "Responsive design (mobile + desktop optimized)",
+    "Elegant product showcase layout",
+    "Smooth navigation & user-friendly UI",
+    "Fast loading performance (optimized assets)",
+    "Modern UI design with luxury feel",
+    "Product detail sections with clean structure"
+  ],
+  "tech_stack": [
+    "Next.js",
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "Vercel",
+    "Custom CSS",
+    "Modern UI principles"
+  ],
+  "innovation": [
+    "Luxury-focused UI design approach",
+    "Minimalistic layout for better product highlighting",
+    "Performance optimization for faster browsing",
+    "Clean structure suitable for scalable e-commerce upgrade"
+  ],
+  "live_link": "https://jewelry-store-ochre.vercel.app/",
+  "github_link": "https://github.com/waizhussain9955/jewelry-store",
+  "image_path": "/public/projects/jewelry-store.png"
+},
+    {
+      "title": "MODERN WATCH STORE",
+      "description": "A modern e-commerce frontend showcasing premium watch collections with responsive UI, product listing and display, and clean navigation system.",
+      "tech_stack": ["HTML", "CSS", "JavaScript", "Modern Frontend Practices"],
+      "live_link": "https://modern-watch-store.vercel.app/",
+      "github_link": "https://github.com/waizhussain9955/modern-watch-store",
+      "image_path": "/public/mockup/modern-watch-store.png"
+    },
+    {
+  "title": "ADVANCED CURRENCY CONVERTER",
+  "description": "Real-time currency converter web app jo multiple global currencies ke beech accurate aur fast conversion provide karta hai. Clean UI aur smooth user experience ke sath design kiya gaya hai.",
+  "features": [
+    "Real-time currency conversion (API-based)",
+    "Multiple currency support (USD, PKR, EUR, etc.)",
+    "Currency swap functionality",
+    "Fast and responsive UI",
+    "User-friendly interface"
+  ],
+  "tech_stack": [
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "Exchange Rate API",
+    "Vercel"
+  ],
+  "innovation": [
+    "Lightweight aur fast-performing design",
+    "Simple UI for quick conversions",
+    "Real-world financial utility integration",
+    "Clean structure for future scalability"
+  ],
+  "live_link": "https://advanced-currency-converter.vercel.app/",
+  "github_link": "https://github.com/waizhussain9955/advanced-currency-converter",
+  "image_path": "/public/projects/advanced-currency-converter.png"
+},
+    {
+      "title": "T DOWNLOADER ANDROID APP",
+      "description": "Android-based video downloader app for fast, watermark-free social media video downloads. Features high-speed downloading, built-in download manager with pause/resume, progress tracking, and clean dark/light mode UI.",
+      "tech_stack": ["Flutter", "Android", "Download Manager", "Mobile-first Design"],
+      "live_link": "https://github.com/waizhussain9955/t-downloader-android-application/releases/download/v1.0.2-beta/T-downloader.apk",
+      "github_link": "https://github.com/waizhussain9955/t-downloader-android-application",
+      "image_path": "/public/mockup/t-downloader.png"
+    },
+    {
+      "title": "WORD BLAZE GAME",
+      "description": "An interactive browser-based word guessing game with dynamic word logic, user interaction handling, and improved UI focused on frontend logic and engaging user experience.",
+      "tech_stack": ["JavaScript", "HTML", "CSS", "Game Logic"],
+      "live_link": "https://word-blaze.vercel.app/",
+      "github_link": "https://github.com/waizhussain9955/WordBlaze",
+      "image_path": "/public/mockup/word-blaze.png"
+    },
+    {
+      "title": "JEWELRY STORE WEBSITE",
+      "description": "Modern and elegant jewelry showcase website with premium product presentation. Features responsive design, elegant product showcase layout, smooth navigation, fast loading performance, and luxury-focused UI design.",
+      "tech_stack": ["Next.js", "HTML", "CSS", "JavaScript", "Vercel"],
+      "live_link": "https://jewelry-store-ochre.vercel.app/",
+      "github_link": "https://github.com/waizhussain9955/jewelry-store",
+      "image_path": "/public/mockup/jewelry-store.png"
+    },
+    {
+      "title": "5 WORD LETTER WEBSITE",
+      "description": "Interactive word-based web application for 5-letter word interactions with real-time input handling, instant feedback mechanism, clean responsive layout, and minimal distraction-free interface.",
+      "tech_stack": ["Next.js", "HTML", "CSS", "JavaScript", "Vercel"],
+      "live_link": "https://5-word-letter.vercel.app/",
+      "github_link": "https://github.com/waizhussain9955/5-word-letter",
+      "image_path": "/public/mockup/5-word-letter.png"
+    },
+    {
+      "title": "LAPTOP E-COMMERCE MOBILE APP",
+      "description": "Laptop-focused mobile e-commerce application for browsing laptops, viewing product details, and smooth mobile shopping experience with mobile-first e-commerce architecture.",
+      "tech_stack": ["Android", "Java/Kotlin", "Mobile-first Design", "E-commerce Architecture"],
+      "live_link": null,
+      "github_link": "https://github.com/waizhussain9955/laptop-E-com",
+      "image_path": "/public/mockup/laptop-ecom.png"
+    },
+    {
+      "title": "SWIFT TRANSLATE PRO",
+      "description": "AI-powered translation tool for multi-language support with API-based translation system, fast response handling, and clean interface for real-time translation.",
+      "tech_stack": ["API Integration", "AI", "Translation", "JavaScript"],
+      "live_link": null,
+      "github_link": "https://github.com/waizhussain9955/SwiftTranslate-Pro",
+      "image_path": "/public/mockup/swift-translate.png"
+    },
+    {
+      "title": "SMART BACHAT COMMITTEE APP",
+      "description": "A financial tracking application for committee savings systems with member tracking, contribution management, and data structuring using Flutter + local data management.",
+      "tech_stack": ["Flutter", "Dart", "Local Storage", "Financial Tracking"],
+      "live_link": "https://github.com/waizhussain9955/smart-committee-app/releases/download/v1.0.2-beta/smart-committee-app.apk",
+      "github_link": "https://github.com/waizhussain9955/smart-committee-app",
+      "image_path": "/public/mockup/smart-committee.png"
+    },
+    {
+      "title": "UNPLUG_AI CHATBOT",
+      "description": "AI chatbot supporting both online and offline modes. Features Gemini API integration, local JSON chat history, smart response reuse system, and offline-first architecture to reduce API costs.",
+      "tech_stack": ["Gemini API", "Node.js", "JSON", "Offline-first Architecture", "AI Chatbot"],
+      "live_link": "https://github.com/waizhussain9955/smart-committee-app/releases/download/v1.0.2-beta/smart-committee-app.apk",
+      "github_link": "https://github.com/waizhussain9955/tiktok-downloader",
+      "image_path": "/public/mockup/unplug-ai.png"
+    },
+    {
+      "title": "SMART OCR SCANNER",
+      "description": "Mobile OCR application for extracting text from images with real-time image scanning, API-based text extraction, and performance optimization.",
+      "tech_stack": ["Flutter", "OCR", "API Integration", "Mobile Development"],
+      "live_link": null,
+      "github_link": "https://github.com/waizhussain9955/tiktok-downloader",
+      "image_path": "/public/mockup/smart-ocr.png"
+    }
+  ],
+  "final_statement": "Not just a developer — a builder focused on creating real, usable, and scalable digital products using modern technologies and AI-powered workflows."
+}
+
+

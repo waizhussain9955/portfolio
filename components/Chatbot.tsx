@@ -1,0 +1,347 @@
+"use client";
+
+import React, { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MessageSquare, X, Send, User, Bot, Loader2, ExternalLink, Paperclip } from "lucide-react";
+
+interface Message {
+    id: string;
+    text: string;
+    sender: "user" | "bot";
+    timestamp: Date;
+}
+
+interface ProjectCardData {
+    title: string;
+    desc: string;
+    image: string;
+    liveLink: string;
+    githubLink: string;
+}
+
+const ProjectMiniCard: React.FC<{ project: ProjectCardData }> = ({ project }) => (
+    <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="mt-4 glass rounded-2xl overflow-hidden border border-accent-primary/20 bg-bg-card/30"
+    >
+        <div className="h-32 w-full relative overflow-hidden bg-accent-primary/5">
+            <img src={project.image} alt={project.title} className="w-full h-full object-cover grayscale-[0.2]" />
+            <div className="absolute inset-0 bg-gradient-to-t from-bg-primary/90 to-transparent" />
+            <h4 className="absolute bottom-3 left-4 font-heading font-bold text-sm text-text-primary">{project.title}</h4>
+        </div>
+        <div className="p-4">
+            <p className="text-[11px] text-text-secondary mb-4 line-clamp-2 leading-relaxed font-body italic">
+                {project.desc}
+            </p>
+            <div className="flex gap-2">
+                <a 
+                    href={project.liveLink} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-accent-primary/10 hover:bg-accent-primary text-accent-primary hover:text-bg-primary rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all"
+                >
+                    <ExternalLink className="w-3 h-3" /> Live
+                </a>
+                <a 
+                    href={project.githubLink} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-white/5 hover:bg-white/10 text-text-primary border border-white/10 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all"
+                >
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                    </svg> Code
+                </a>
+            </div>
+        </div>
+    </motion.div>
+);
+
+const ResumeDownloadButton: React.FC = () => (
+    <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mt-4"
+    >
+        <a
+            href="/resume/Waiz_Hussain_Resume.pdf"
+            download="Waiz_Hussain_Resume.pdf"
+            className="group relative flex items-center justify-between gap-4 p-4 bg-gradient-to-r from-accent-primary/20 to-accent-primary/5 hover:from-accent-primary/30 hover:to-accent-primary/10 border border-accent-primary/30 rounded-2xl transition-all duration-300 overflow-hidden shadow-lg shadow-accent-primary/5"
+        >
+            <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-accent-primary/20 flex items-center justify-center text-accent-primary group-hover:scale-110 transition-transform">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                </div>
+                <div>
+                    <h5 className="text-xs font-bold text-text-primary uppercase tracking-wider">Download Resume</h5>
+                    <p className="text-[10px] text-text-secondary">PDF Format • 9KB</p>
+                </div>
+            </div>
+            <div className="w-8 h-8 rounded-full bg-accent-primary text-bg-primary flex items-center justify-center -rotate-45 group-hover:rotate-0 transition-transform shadow-md">
+                <ExternalLink className="w-4 h-4" />
+            </div>
+        </a>
+    </motion.div>
+);
+
+const MessageBubble: React.FC<{ msg: Message }> = ({ msg }) => {
+    // Split logic for both Project Cards and Resume Button
+    // [PROJECT_CARD: ...] or [RESUME_BUTTON]
+    const parts = msg.text.split(/(\[PROJECT_CARD: (.*?)\]|\[RESUME_BUTTON\])/g).filter(Boolean);
+
+    // Check if any project cards or resume button exist in this message
+    const hasProjectCard = parts.some(p => p.startsWith("[PROJECT_CARD:"));
+    const hasResumeButton = parts.some(p => p === "[RESUME_BUTTON]");
+    const hasSpecialContent = hasProjectCard || hasResumeButton;
+
+    return (
+        <div className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
+            <div className={`flex gap-2 max-w-[98%] ${msg.sender === "user" ? "flex-row-reverse" : "flex-row"}`}>
+                <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                    msg.sender === "user" 
+                    ? "bg-accent-primary text-bg-primary" 
+                    : "bg-white/5 border border-white/10 text-accent-primary"
+                }`}>
+                    {msg.sender === "user" ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
+                </div>
+                <div className="flex flex-col gap-2 min-w-0">
+                    <div className={`py-3 px-4 rounded-2xl text-sm leading-relaxed overflow-hidden break-words whitespace-pre-wrap ${
+                        msg.sender === "user"
+                        ? "bg-accent-primary text-bg-primary font-medium"
+                        : "bg-white/5 border border-white/10 text-text-secondary"
+                    }`}>
+                        {parts.map((part, index) => {
+                            if (part === "[RESUME_BUTTON]") {
+                                return <ResumeDownloadButton key={index} />;
+                            } else if (part.startsWith("[PROJECT_CARD:")) {
+                                const cardContent = part.replace("[PROJECT_CARD: ", "").replace("]", "");
+                                const [title, desc, image, live, github] = cardContent.split(' | ').map(p => p.trim());
+                                const cardData: ProjectCardData = { title, desc, image, liveLink: live, githubLink: github };
+                                return <ProjectMiniCard key={index} project={cardData} />;
+                            } else if (!hasSpecialContent && !part.includes("[PROJECT_CARD:") && part !== "[RESUME_BUTTON]") {
+                                // Only show plain text if there are NO project cards or resume buttons in this message
+                                return <span key={index}>{part}</span>;
+                            } else if (hasSpecialContent && !part.startsWith("[PROJECT_CARD:") && part !== "[RESUME_BUTTON]") {
+                                // Skip text when special content (project cards / resume) is present
+                                return null;
+                            }
+                            return null;
+                        })}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const Chatbot: React.FC = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [input, setInput] = useState("");
+    const [messages, setMessages] = useState<Message[]>([
+        {
+            id: "1",
+            text: "Hi! I'm Waiz's AI assistant. 🚀 Ask me about his projects with 'Next.js' or 'Flutter' and I'll show you his best work!",
+            sender: "bot",
+            timestamp: new Date(),
+        },
+    ]);
+    const [isLoading, setIsLoading] = useState(false);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
+
+    const handleSend = async () => {
+        if (!input.trim() || isLoading) return;
+
+        const userMessage: Message = {
+            id: Date.now().toString(),
+            text: input.trim(),
+            sender: "user",
+            timestamp: new Date(),
+        };
+
+        setMessages((prev) => [...prev, userMessage]);
+        setInput("");
+        setIsLoading(true);
+
+        const chatHistory = messages.slice(-10).map(msg => ({
+            role: msg.sender === 'bot' ? 'assistant' as const : 'user' as const,
+            content: msg.text
+        }));
+
+        try {
+            const response = await fetch("/api/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 
+                    message: userMessage.text,
+                    history: chatHistory
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.response) {
+                const botMessage: Message = {
+                    id: (Date.now() + 1).toString(),
+                    text: data.response,
+                    sender: "bot",
+                    timestamp: new Date(),
+                };
+                setMessages((prev) => [...prev, botMessage]);
+            } else {
+                throw new Error("Failed to get response");
+            }
+        } catch (error) {
+            console.error("Chat error:", error);
+            const errorMessage: Message = {
+                id: (Date.now() + 1).toString(),
+                text: "I'm sorry, I'm having a technical glitch. Could you try asking that again in a moment?",
+                sender: "bot",
+                timestamp: new Date(),
+            };
+            setMessages((prev) => [...prev, errorMessage]);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    return (
+        <div className="fixed bottom-6 right-6 z-50">
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.8, y: 50, transformOrigin: "bottom right" }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.8, y: 50 }}
+                        className="mb-4 w-[350px] md:w-[430px] h-[450px] md:h-[550px] flex flex-col bg-[#0d1117] rounded-xl overflow-hidden shadow-[0_20px_50px_var(--color-glow)] border border-accent-primary/20"
+                    >
+                        {/* Header */}
+                        <div className="px-6 py-4 bg-gradient-to-r from-accent-primary/20 to-teal-500/10 border-b border-accent-primary/10 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-accent-primary to-teal-400 flex items-center justify-center shadow-md">
+                                    <span className="text-[#0d1117] font-black text-sm tracking-tight leading-none">WH</span>
+                                </div>
+                                <div>
+                                    <h3 className="font-heading font-bold text-sm tracking-tight text-text-primary">Waiz&apos;s AI Agent</h3>
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                        <span className="text-[10px] text-text-secondary font-medium tracking-wide">Online & Ready</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => setIsOpen(false)}
+                                className="p-2 hover:bg-white/10 rounded-xl transition-colors text-text-secondary hover:text-text-primary"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+
+                        {/* Messages */}
+                        <div className="flex-1 overflow-y-auto p-2 py-4 space-y-5 scrollbar-hide">
+                            {messages.map((msg) => (
+                                <motion.div
+                                    key={msg.id}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                >
+                                    <MessageBubble msg={msg} />
+                                </motion.div>
+                            ))}
+                            {isLoading && (
+                                <div className="flex justify-start">
+                                    <div className="flex gap-3 items-center">
+                                        <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                                            <Loader2 className="w-4 h-4 text-accent-primary animate-spin" />
+                                        </div>
+                                        <div className="px-5 py-3 bg-white/5 border border-white/10 rounded-full text-[10px] text-text-muted font-bold uppercase tracking-widest">
+                                            Synthesizing Answer...
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            <div ref={messagesEndRef} />
+                        </div>
+
+                        {/* Input */}
+                        <div className="p-4 border-t border-white/5">
+                            <div
+                                className="relative flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] transition-all duration-200"
+                                style={{ boxShadow: input ? '0 0 0 1.5px var(--color-accent-primary)' : 'none' }}
+                            >
+                                <textarea
+                                    value={input}
+                                    onChange={(e) => {
+                                        setInput(e.target.value);
+                                        e.target.style.height = 'auto';
+                                        e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
+                                    }}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && !e.shiftKey) {
+                                            e.preventDefault();
+                                            handleSend();
+                                        }
+                                    }}
+                                    placeholder="Ask a question..."
+                                    rows={1}
+                                    className="w-full bg-transparent resize-none py-3.5 px-4 text-sm focus:outline-none placeholder:text-text-muted text-text-primary leading-relaxed scrollbar-hide"
+                                    style={{ minHeight: '46px', maxHeight: '120px' }}
+                                />
+                                <div className="flex items-center justify-between px-3 pb-2.5">
+                                    <button
+                                        type="button"
+                                        className="p-1.5 text-text-muted hover:text-accent-primary transition-colors rounded-lg hover:bg-accent-primary/10"
+                                        title="Attach file"
+                                    >
+                                        <Paperclip className="w-4 h-4" />
+                                    </button>
+                                    <button
+                                        onClick={handleSend}
+                                        disabled={!input.trim() || isLoading}
+                                        className="p-2 rounded-lg transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
+                                        style={{
+                                            background: input.trim() ? 'var(--color-accent-primary)' : 'rgba(255,255,255,0.08)',
+                                            color: input.trim() ? '#0d1117' : 'var(--color-text-muted)'
+                                        }}
+                                    >
+                                        <Send className="w-3.5 h-3.5" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Toggle Button */}
+            {!isOpen && (
+                <motion.button
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => setIsOpen(true)}
+                    className="p-5 bg-accent-primary text-bg-primary rounded-full shadow-[0_10px_30px_rgba(16,185,129,0.5)] border-2 border-white/20 relative group"
+                >
+                    <MessageSquare className="w-6 h-6" />
+                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-bg-primary animate-pulse" />
+                    
+                    {/* Tooltip */}
+                    <div className="absolute right-full mr-4 top-1/2 -translate-y-1/2 px-4 py-2 bg-accent-primary text-bg-primary text-xs font-bold rounded-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-xl">
+                        Chat with my AI
+                    </div>
+                </motion.button>
+            )}
+        </div>
+    );
+};
+
+export default Chatbot;
