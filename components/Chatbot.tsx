@@ -65,8 +65,8 @@ const ResumeDownloadButton: React.FC = () => (
         className="mt-4"
     >
         <a
-            href="/resume/waiz%20Resume%20Full-Stack-Dev.pdf"
-            download="waiz_Resume_Full-Stack-Dev.pdf"
+            href="/resume/Waiz_Resume_Full_Stack_Dev.pdf"
+            download="Waiz_Resume_Full_Stack_Dev.pdf"
             className="group relative flex items-center justify-between gap-4 p-4 bg-gradient-to-r from-accent-primary/20 to-accent-primary/5 hover:from-accent-primary/30 hover:to-accent-primary/10 border border-accent-primary/30 rounded-2xl transition-all duration-300 overflow-hidden shadow-lg shadow-accent-primary/5"
         >
             <div className="flex items-center gap-3">

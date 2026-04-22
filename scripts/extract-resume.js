@@ -3,7 +3,7 @@ const path = require('path');
 const { PDFParse } = require('pdf-parse');
 
 async function extractResume() {
-    const resumePath = path.resolve(process.cwd(), 'public/resume/waiz Resume Full-Stack-Dev.pdf');
+    const resumePath = path.resolve(process.cwd(), 'public/resume/Waiz_Resume_Full_Stack_Dev.pdf');
     if (!fs.existsSync(resumePath)) {
         console.error("Resume not found at:", resumePath);
         return;

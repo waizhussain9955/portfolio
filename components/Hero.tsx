@@ -54,8 +54,8 @@ const Hero: React.FC = () => {
                             View My Work
                         </a>
                         <a
-                            href="/resume/waiz%20Resume%20Full-Stack-Dev.pdf"
-                            download="waiz_Resume_Full-Stack-Dev.pdf"
+                            href="/resume/Waiz_Resume_Full_Stack_Dev.pdf"
+                            download="Waiz_Resume_Full_Stack_Dev.pdf"
                             className="px-10 py-4 border border-accent-primary text-accent-primary font-bold rounded-full hover:bg-accent-primary/10 transition-all transform hover:-translate-y-1"
                         >
                             Download Resume

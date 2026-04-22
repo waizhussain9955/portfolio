@@ -4,7 +4,7 @@ import pdf from 'pdf-parse/lib/pdf-parse.js';
 import { projects } from '../components/Projects.tsx';
 
 async function extractKnowledge() {
-    const resumePath = path.resolve(process.cwd(), 'public/resume/waiz Resume Full-Stack-Dev.pdf');
+    const resumePath = path.resolve(process.cwd(), 'public/resume/Waiz_Resume_Full_Stack_Dev.pdf');
     const dataBuffer = fs.readFileSync(resumePath);
     
     let resumeText = "";
