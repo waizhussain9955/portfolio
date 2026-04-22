@@ -31,8 +31,8 @@ const About: React.FC = () => {
                             <button
                                 onClick={() => {
                                     const link = document.createElement('a');
-                                    link.href = '/resume/Waiz_Hussain_Resume.pdf';
-                                    link.download = 'Waiz_Hussain_Resume.pdf';
+                                    link.href = '/resume/waiz%20Resume%20Full-Stack-Dev.pdf';
+                                    link.download = 'waiz_Resume_Full-Stack-Dev.pdf';
                                     document.body.appendChild(link);
 
                                     const btn = document.getElementById('resume-btn');

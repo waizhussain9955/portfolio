@@ -69,7 +69,7 @@ Skills: Next.js, React, Node.js, Flutter, Python, JavaScript, TypeScript, MongoD
 Core Info:
 ${coreKnowledge}
 
-Resume Download URL: /resume/Waiz_Hussain_Resume.pdf
+Resume Download URL: /resume/waiz%20Resume%20Full-Stack-Dev.pdf
 
 Relevant Resume Details:
 ${relevantResume.join('\n\n')}
