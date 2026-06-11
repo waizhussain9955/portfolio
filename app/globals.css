@@ -27,6 +27,23 @@
   --gradient-text: linear-gradient(135deg, #34d399 0%, #14b8a6 100%);
 }
 
+[data-theme='light'] {
+  /* Background Colors */
+  --color-bg-primary: #f8fafc;
+  --color-bg-secondary: #ffffff;
+  --color-bg-card: rgba(241, 245, 249, 0.7);
+
+  /* Text Colors */
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #334155;
+  --color-text-muted: #64748b;
+
+  /* Effects */
+  --color-border: rgba(16, 185, 129, 0.2);
+  --color-glow: rgba(16, 185, 129, 0.08);
+}
+
+
 * {
   margin: 0;
   padding: 0;

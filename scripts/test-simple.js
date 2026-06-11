@@ -23,7 +23,7 @@ async function testSimple() {
     
     try {
         const response = await client.chat.completions.create({
-            model: 'llama3.1-8b',
+            model: 'gpt-oss-120b',
             messages: [
                 { role: 'system', content: systemPrompt },
                 { role: 'user', content: query }

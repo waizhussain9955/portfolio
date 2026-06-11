@@ -1,0 +1,11 @@
+{
+  "name": "browser_subagent",
+  "args": {
+    "RecordingName": "\"check_chat_hydration\"",
+    "Task": "\"Navigate to http://localhost:3000. Wait for the page to load and compile. Confirm there are no React hydration errors or popup dialog overlays. Then locate the chat/chatbot widget or icon (usually bottom-right), open the chat window, type 'What are Waiz Hussain's skills?', send it, wait for a response, and verify the bot responds successfully. Report back if any hydration errors were seen or if the chatbot failed to respond.\"",
+    "TaskName": "\"Verifying website hydration and chatbot function\"",
+    "TaskSummary": "\"Navigate to localhost:3000 to verify that the hydration error is resolved and the chatbot responds successfully.\"",
+    "toolAction": "\"Running browser subagent to verify hydration and chat\"",
+    "toolSummary": "\"Verify hydration and chat\""
+  }
+}

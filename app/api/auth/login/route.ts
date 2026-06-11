@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getNeonSql } from '@/lib/neon';
 import bcrypt from 'bcryptjs';
+import { signJWT, getJwtSecret } from '@/lib/auth';
 
 export async function POST(req: Request) {
   try {
@@ -27,12 +28,55 @@ export async function POST(req: Request) {
     }
 
     // Return user info (omit password)
-    const { password: _, ...userWithoutPassword } = user;
+    const { password: _, refresh_token: __, token_expires: ___, ...userWithoutPassword } = user;
     
-    return NextResponse.json({ 
+    const response = NextResponse.json({ 
       message: 'Login successful',
       user: userWithoutPassword
     });
+
+    const secret = getJwtSecret();
+    const accessToken = await signJWT(
+      { id: user.id, email: user.email, name: user.name, role: user.role || 'client' },
+      secret,
+      900000 // 15 mins
+    );
+
+    const refreshToken = await signJWT(
+      { id: user.id, type: 'refresh' },
+      secret,
+      604800000 // 7 days
+    );
+
+    // Save refresh token to database
+    await sql`
+      UPDATE users 
+      SET refresh_token = ${refreshToken}, 
+          token_expires = NOW() + INTERVAL '7 days' 
+      WHERE id = ${user.id}
+    `;
+
+    response.cookies.set({
+      name: 'access_token',
+      value: accessToken,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 900, // 15 mins (seconds)
+      path: '/'
+    });
+
+    response.cookies.set({
+      name: 'refresh_token',
+      value: refreshToken,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 604800, // 7 days (seconds)
+      path: '/'
+    });
+
+    return response;
   } catch (error) {
     console.error('Login Error:', error);
     return NextResponse.json({ error: 'Something went wrong during login' }, { status: 500 });

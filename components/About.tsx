@@ -2,8 +2,11 @@
 
 import React from "react";
 import ScrollAnimation from "./ScrollAnimation";
+import { useLanguage } from "./LanguageContext";
 
 const About: React.FC = () => {
+    const { t } = useLanguage();
+
     return (
         <section id="about" className="py-24 relative overflow-hidden">
             <div className="container mx-auto px-6">
@@ -11,22 +14,16 @@ const About: React.FC = () => {
                     {/* Left Column: Content */}
                     <div className="lg:w-7/12">
                         <ScrollAnimation>
-                            <div className="flex items-center space-x-2 text-accent-primary mb-4">
+                            <div className="flex items-center space-x-2 rtl:space-x-reverse text-accent-primary mb-4">
                                 <span className="w-8 h-[1px] bg-accent-primary"></span>
-                                <span className="text-sm font-bold tracking-widest uppercase">About Me</span>
+                                <span className="text-sm font-bold tracking-widest uppercase">{t.aboutTitle}</span>
                             </div>
                             <h2 className="text-4xl md:text-5xl font-heading font-bold mb-8">
-                                A Few Words About Me
+                                {t.aboutSubtitle}
                             </h2>
                             <p className="text-text-secondary text-lg mb-10 leading-relaxed">
-                                I am a Full Stack Developer and AI Builder based in Pakistan. With
-                                hands-on experience in HTML5, CSS3, Tailwind CSS, React.js, Next.js,
-                                Node.js, Flutter, and Python, I specialize in building real-world
-                                applications across web, mobile, and AI domains. My deep focus on
-                                Autonomous Systems, SaaS products, and AI-assisted workflows drives
-                                me to create scalable, production-ready digital products.
+                                {t.aboutDescription}
                             </p>
-
 
                             <button
                                 onClick={() => {
@@ -48,9 +45,9 @@ const About: React.FC = () => {
                                     document.body.removeChild(link);
                                 }}
                                 id="resume-btn"
-                                className="inline-flex items-center space-x-2 px-8 py-3 bg-transparent border border-accent-primary text-accent-primary font-bold rounded-full hover:bg-accent-primary/10 transition-all group"
+                                className="inline-flex items-center space-x-2 rtl:space-x-reverse px-8 py-3 bg-transparent border border-accent-primary text-accent-primary font-bold rounded-full hover:bg-accent-primary/10 transition-all group"
                             >
-                                <span>Download Resume</span>
+                                <span>{t.downloadResume}</span>
                                 <svg
                                     className="w-5 h-5 group-hover:translate-y-1 transition-transform"
                                     fill="none"
@@ -70,25 +67,25 @@ const About: React.FC = () => {
                                 {/* Rotating Border Aura */}
                                 <div className="absolute inset-0 -m-4 rounded-full bg-gradient-primary animate-spin-slow blur-md opacity-30" />
 
-                                {/* Avatar Placeholder */}
-                                <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-full border-4 border-bg-secondary flex items-center justify-center bg-bg-secondary overflow-hidden">
-                                    <span className="text-7xl md:text-8xl font-heading font-extrabold text-gradient pointer-events-none">
+                                {/* Avatar Wrapper */}
+                                <div className="relative w-[200px] h-[200px] sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-full border-4 border-bg-secondary flex items-center justify-center bg-bg-secondary overflow-hidden">
+                                    <span className="text-6xl sm:text-7xl md:text-8xl font-heading font-extrabold text-gradient pointer-events-none">
                                         WH
                                     </span>
                                 </div>
 
                                 {/* Floating Badges */}
-                                <div className="absolute top-0 -left-12 p-3 glass rounded-xl text-xs font-bold animate-float flex items-center space-x-2">
+                                <div className="absolute top-0 -left-6 sm:-left-12 rtl:left-auto rtl:-right-6 rtl:sm:-right-12 p-3 glass rounded-xl text-xs font-bold animate-float hidden sm:flex items-center space-x-2 rtl:space-x-reverse">
                                     <span>🏢</span>
-                                    <span>Full Stack Developer</span>
+                                    <span>{t.badgeFullStack}</span>
                                 </div>
-                                <div className="absolute bottom-10 -right-16 p-3 glass rounded-xl text-xs font-bold animate-float-delayed flex items-center space-x-2">
+                                <div className="absolute bottom-10 -right-8 sm:-right-16 rtl:right-auto rtl:-left-8 rtl:sm:-left-16 p-3 glass rounded-xl text-xs font-bold animate-float-delayed hidden sm:flex items-center space-x-2 rtl:space-x-reverse">
                                     <span>🤖</span>
-                                    <span>AI Builder</span>
+                                    <span>{t.badgeAIBuilder}</span>
                                 </div>
-                                <div className="absolute -bottom-8 left-4 p-3 glass rounded-xl text-xs font-bold animate-float flex items-center space-x-2">
+                                <div className="absolute -bottom-8 left-4 rtl:left-auto rtl:right-4 p-3 glass rounded-xl text-xs font-bold animate-float hidden sm:flex items-center space-x-2 rtl:space-x-reverse">
                                     <span>📍</span>
-                                    <span>Pakistan</span>
+                                    <span>{t.badgeLocation}</span>
                                 </div>
                             </div>
                         </ScrollAnimation>

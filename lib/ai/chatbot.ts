@@ -22,31 +22,74 @@ interface ChatMessage {
 }
 
 export async function getChatResponse(userMessage: string, history: ChatMessage[] = []) {
+    // 1. Load configurations from site_settings database
+    let chatbotConfig = {
+        system_prompt: `⚠️ GOLDEN RULE: ONLY speak about projects explicitly listed in the "Relevant Projects Data" section below. 
+- If a project is not in that list, IT DOES NOT EXIST.
+- NEVER invent, hallucinate, or assume he has other projects.
+- Speak in the third person.
+- Keep answers SHORT and snappy.
+- Use [PROJECT_CARD: Title | Description | ImagePath | LiveLink | GithubLink] for any project mentioned.
+- Use [RESUME_BUTTON] if asked for a resume.`,
+        temperature: 0.7,
+        min_relevance_score: 0.1,
+        offline_fallback_message: "I'm sorry, I'm currently in 'offline mode' because my AI brain (Cerebras API Key) hasn't been connected yet. Please add the CEREBRAS_API_KEY to the .env.local file to enable my full capabilities!"
+    };
+
+    let siteInfo = {
+        hero_title: "Waiz Hussain",
+        hero_subtitle: "Full Stack Developer | AI Builder | Autonomous Systems Developer",
+        about_bio: "Building real-world applications across web, mobile, and AI domains using Next.js, Flutter & Node.js. Specialized in Autonomous Systems, SaaS products, and AI-powered workflows.",
+        resume_url: "/resume/Waiz_Resume_Full_Stack_Dev.pdf"
+    };
+
+    try {
+        const settingsRows = await sql`SELECT config_key, config_val FROM site_settings` as { config_key: string, config_val: any }[];
+        const chatRow = settingsRows.find(r => r.config_key === 'chatbot_config');
+        if (chatRow && chatRow.config_val) {
+            chatbotConfig = { ...chatbotConfig, ...chatRow.config_val };
+        }
+        const siteRow = settingsRows.find(r => r.config_key === 'site_info');
+        if (siteRow && siteRow.config_val) {
+            siteInfo = { ...siteInfo, ...siteRow.config_val };
+        }
+    } catch (dbErr) {
+        console.warn("[Chatbot] Failed to load dynamic settings from DB, using defaults:", dbErr);
+    }
+
     if (!client) {
-        return "I'm sorry, I'm currently in 'offline mode' because my AI brain (Cerebras API Key) hasn't been connected yet. Please add the CEREBRAS_API_KEY to the .env.local file to enable my full capabilities!";
+        return chatbotConfig.offline_fallback_message;
     }
 
     try {
-        // 1. Core Knowledge (Always present)
+        // 2. Core Knowledge (Dynamic/Static Blend)
         const coreKnowledge = `
-Name: Waiz Hussain
-Role: Full Stack Developer | AI Builder | Autonomous Systems Developer
+Name: ${siteInfo.hero_title}
+Role: ${siteInfo.hero_subtitle}
 Location: Pakistan
-Summary: Building real-world applications across web, mobile, and AI domains using Next.js, Flutter & Node.js. Specialized in Autonomous Systems, SaaS products, and AI-powered workflows.
+Summary: ${siteInfo.about_bio}
 Skills: Next.js, React, Node.js, Flutter, Python, JavaScript, TypeScript, MongoDB, Express.js, Supabase, Firebase, Gemini API, Prompt Engineering, AI Chatbot Systems, SaaS Development.
         `.trim();
 
-        // 2. Fetch all resume chunks and rank them
+        // 3. Fetch all resume chunks and knowledge base entries and rank them
         const resumeChunks = await sql`SELECT content FROM resume_chunks` as { content: string }[];
-        const rankedResume = resumeChunks.map((row: { content: string }) => ({
+        let kbEntries: { content: string }[] = [];
+        try {
+            kbEntries = await sql`SELECT content FROM knowledge_base` as { content: string }[];
+        } catch (_) {
+            console.warn("[Chatbot] Could not load knowledge_base entries.");
+        }
+        const allChunks = [...resumeChunks, ...kbEntries];
+
+        const rankedChunks = allChunks.map((row: { content: string }) => ({
             content: row.content,
             score: stringSimilarity(userMessage.toLowerCase(), row.content.toLowerCase())
         })).sort((a: any, b: any) => b.score - a.score);
 
-        // Get top 4 relevant chunks
-        const relevantResume = rankedResume.slice(0, 4).map((item: any) => item.content);
+        // Get top 6 relevant chunks
+        const relevantContext = rankedChunks.slice(0, 6).map((item: any) => item.content);
 
-        // 3. Fetch all projects and rank them
+        // 4. Fetch all projects and rank them
         const dbProjects = await sql`SELECT * FROM projects` as Project[];
         const rankedProjects = dbProjects.map(p => {
             const searchStr = `${p.title} ${p.description} ${p.tags.join(' ')}`.toLowerCase();
@@ -54,8 +97,9 @@ Skills: Next.js, React, Node.js, Flutter, Python, JavaScript, TypeScript, MongoD
             return { ...p, score };
         }).sort((a, b) => b.score - a.score);
 
-        // Dynamic Project Selection
-        let relevantProjects = rankedProjects.filter(p => p.score > 0.1); 
+        // Dynamic Project Selection using RAG score threshold from configuration
+        const minScore = chatbotConfig.min_relevance_score;
+        let relevantProjects = rankedProjects.filter(p => p.score > minScore); 
         if (relevantProjects.length < 5) {
             relevantProjects = rankedProjects.slice(0, 5);
         }
@@ -69,35 +113,29 @@ Skills: Next.js, React, Node.js, Flutter, Python, JavaScript, TypeScript, MongoD
 Core Info:
 ${coreKnowledge}
 
-Resume Download URL: /resume/Waiz_Resume_Full_Stack_Dev.pdf
+Resume Download URL: ${siteInfo.resume_url}
 
-Relevant Resume Details:
-${relevantResume.join('\n\n')}
+Relevant Resume & Knowledge Details:
+${relevantContext.join('\n\n')}
 
 Relevant Projects Data (from Neon DB):
 ${projectContext}
 `.trim();
 
-        const systemPrompt = `⚠️ GOLDEN RULE: ONLY speak about projects explicitly listed in the "Relevant Projects Data" section below. 
-- If a project is not in that list, IT DOES NOT EXIST.
-- NEVER invent, hallucinate, or assume he has other projects.
-- Speak in the third person.
-- Keep answers SHORT and snappy.
-- Use [PROJECT_CARD: Title | Description | ImagePath | LiveLink | GithubLink] for any project mentioned.
-- Use [RESUME_BUTTON] if asked for a resume.
+        const systemPrompt = `${chatbotConfig.system_prompt}
 
 Context:
 ${context}
 `;
 
         const response = (await client.chat.completions.create({
-            model: 'llama3.1-8b', 
+            model: 'gpt-oss-120b', 
             messages: [
                 { role: 'system', content: systemPrompt },
                 ...history.map(msg => ({ role: (msg.role === 'assistant' ? 'assistant' : 'user') as "user" | "assistant", content: msg.content })),
                 { role: 'user', content: userMessage }
             ],
-            temperature: 0.7,
+            temperature: chatbotConfig.temperature,
             max_tokens: 1000,
         })) as any;
 

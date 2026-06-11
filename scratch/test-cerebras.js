@@ -1,4 +1,3 @@
-
 const { Cerebras } = require('@cerebras/cerebras_cloud_sdk');
 require('dotenv').config({ path: '.env.local' });
 
@@ -10,11 +9,11 @@ async function testCerebras() {
     try {
         const client = new Cerebras({ apiKey });
         const response = await client.chat.completions.create({
-            model: 'llama3.1-8b',
-            messages: [{ role: 'user', content: 'hi' }],
-            max_tokens: 10
+            model: 'gpt-oss-120b',
+            messages: [{ role: 'user', content: 'Say hello in 3 words' }],
+            max_tokens: 100
         });
-        console.log("Cerebras Response:", response.choices[0].message.content);
+        console.log("Full Response Choice message:", JSON.stringify(response.choices[0].message, null, 2));
     } catch (err) {
         console.error("Cerebras Error:", err.message);
     }

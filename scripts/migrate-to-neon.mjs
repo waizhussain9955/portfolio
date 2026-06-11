@@ -35,6 +35,7 @@ async function migrate() {
         image TEXT NOT NULL,
         live_link TEXT NOT NULL,
         github_link TEXT NOT NULL,
+        show_on_homepage BOOLEAN DEFAULT TRUE,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       )
     `;

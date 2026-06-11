@@ -3,8 +3,10 @@
 import React, { useState } from "react";
 import ScrollAnimation from "./ScrollAnimation";
 import emailjs from "@emailjs/browser";
+import { useLanguage } from "./LanguageContext";
 
 const Contact: React.FC = () => {
+    const { t, language } = useLanguage();
     const [user, setUser] = useState<any>(null);
     const [formData, setFormData] = useState({
         name: "",
@@ -62,10 +64,22 @@ const Contact: React.FC = () => {
             from_email: formData.email,
             subject: formData.subject,
             message: formData.message,
-            to_name: "Waiz Hussain", // Adding to_name as a best practice
+            to_name: "Waiz Hussain",
         };
 
         try {
+            // 1. Log to Neon DB CRM contacts & leads tables
+            const dbRes = await fetch("/api/public/contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+            });
+            if (!dbRes.ok) {
+                const errData = await dbRes.json();
+                throw new Error(errData.error || "Failed to record message in CRM database");
+            }
+
+            // 2. Deliver email notification via EmailJS
             const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
             const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
             const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
@@ -74,7 +88,7 @@ const Contact: React.FC = () => {
 
             if (!serviceId || !templateId || !publicKey || serviceId === 'YOUR_SERVICE_ID') {
                 console.warn("EmailJS IDs are missing or using placeholders. Form will simulate success.");
-                await new Promise(resolve => setTimeout(resolve, 1500));
+                await new Promise(resolve => setTimeout(resolve, 1000));
             } else {
                 const response = await emailjs.send(serviceId, templateId, templateParams, publicKey);
                 console.log("EmailJS Success:", response);
@@ -88,9 +102,9 @@ const Contact: React.FC = () => {
             }));
             setTimeout(() => setIsSent(false), 5000);
         } catch (err: any) {
-            console.error("EmailJS Error Details:", err);
-            const errorText = err?.text || err?.message || 'Unknown error';
-            setError(`Error: ${errorText}. Please check the console for details.`);
+            console.error("Form Submission Error:", err);
+            const errorText = err?.message || err?.text || 'Unknown error';
+            setError(`Error: ${errorText}`);
         } finally {
             setIsSubmitting(false);
         }
@@ -109,30 +123,29 @@ const Contact: React.FC = () => {
                         <ScrollAnimation>
                             <div className="flex items-center space-x-2 text-accent-primary mb-4">
                                 <span className="w-8 h-[1px] bg-accent-primary"></span>
-                                <span className="text-sm font-bold tracking-widest uppercase">Contact</span>
+                                <span className="text-sm font-bold tracking-widest uppercase">{t.navContact}</span>
                             </div>
                             <h2 className="text-4xl md:text-5xl font-heading font-bold mb-8">
-                                Let&apos;s Work Together
+                                {t.contactSubtitleLeft}
                             </h2>
                             <p className="text-text-secondary text-lg mb-10 leading-relaxed max-w-lg">
-                                I&apos;m always open to new opportunities and collaborations. If you have a project in
-                                mind or just want to say hi, feel free to reach out!
+                                {t.contactDescriptionLeft}
                             </p>
 
                             <div className="space-y-8 mb-12">
-                                <div className="flex items-center space-x-6 group">
+                                <div className="flex items-center space-x-6 rtl:space-x-reverse group">
                                     <div className="w-12 h-12 glass rounded-2xl flex items-center justify-center text-accent-primary group-hover:scale-110 transition-transform">
                                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                         </svg>
                                     </div>
                                     <div>
-                                        <h4 className="text-xs font-bold uppercase tracking-widest text-text-secondary mb-1">Email</h4>
-                                        <p className="text-lg font-medium">waizhussain9955@gmail.com</p>
+                                        <h4 className="text-xs font-bold uppercase tracking-widest text-text-secondary mb-1">{t.contactLabelEmail}</h4>
+                                        <p className="text-base sm:text-lg font-medium break-all">waizhussain9955@gmail.com</p>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center space-x-6 group">
+                                <div className="flex items-center space-x-6 rtl:space-x-reverse group">
                                     <div className="w-12 h-12 glass rounded-2xl flex items-center justify-center text-accent-secondary group-hover:scale-110 transition-transform">
                                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -140,26 +153,26 @@ const Contact: React.FC = () => {
                                         </svg>
                                     </div>
                                     <div>
-                                        <h4 className="text-xs font-bold uppercase tracking-widest text-text-secondary mb-1">Location</h4>
-                                        <p className="text-lg font-medium">Pakistan</p>
+                                        <h4 className="text-xs font-bold uppercase tracking-widest text-text-secondary mb-1">{t.contactLabelLocation}</h4>
+                                        <p className="text-base sm:text-lg font-medium">{t.badgeLocation}</p>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center space-x-6 group">
+                                <div className="flex items-center space-x-6 rtl:space-x-reverse group">
                                     <div className="w-12 h-12 glass rounded-2xl flex items-center justify-center text-accent-light group-hover:scale-110 transition-transform">
                                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                         </svg>
                                     </div>
                                     <div>
-                                        <h4 className="text-xs font-bold uppercase tracking-widest text-text-secondary mb-1">Availability</h4>
-                                        <p className="text-lg font-medium">Open to Freelance & Full-Time</p>
+                                        <h4 className="text-xs font-bold uppercase tracking-widest text-text-secondary mb-1">{t.contactLabelAvailability}</h4>
+                                        <p className="text-base sm:text-lg font-medium">{t.contactValueAvailability}</p>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Social Links */}
-                            <div className="flex space-x-4">
+                            <div className="flex space-x-4 rtl:space-x-reverse">
                                 <a
                                     href="https://github.com/waizhussain9955"
                                     target="_blank"
@@ -201,13 +214,13 @@ const Contact: React.FC = () => {
                     <div className="lg:w-1/2 relative">
 
                         <ScrollAnimation delay={200}>
-                            <div className="p-8 md:p-10 rounded-3xl border-border/50 glass">
+                            <div className="p-5 sm:p-8 md:p-10 rounded-3xl border-border/50 glass">
                                 <form onSubmit={handleSubmit} className="space-y-6">
                                     {!isSent ? (
                                         <>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <div className="space-y-2">
-                                                    <label className="text-sm font-bold text-text-secondary ml-1">Name</label>
+                                                    <label className="text-sm font-bold text-text-secondary ml-1 rtl:ml-0 rtl:mr-1">{t.formName}</label>
                                                     <input
                                                         type="text"
                                                         name="name"
@@ -220,7 +233,7 @@ const Contact: React.FC = () => {
                                                     />
                                                 </div>
                                                 <div className="space-y-2">
-                                                    <label className="text-sm font-bold text-text-secondary ml-1">Email</label>
+                                                    <label className="text-sm font-bold text-text-secondary ml-1 rtl:ml-0 rtl:mr-1">{t.formEmail}</label>
                                                     <input
                                                         type="email"
                                                         name="email"
@@ -234,7 +247,7 @@ const Contact: React.FC = () => {
                                                 </div>
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-sm font-bold text-text-secondary ml-1">Subject</label>
+                                                <label className="text-sm font-bold text-text-secondary ml-1 rtl:ml-0 rtl:mr-1">{t.formSubject}</label>
                                                 <input
                                                     type="text"
                                                     name="subject"
@@ -246,7 +259,7 @@ const Contact: React.FC = () => {
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-sm font-bold text-text-secondary ml-1">Message</label>
+                                                <label className="text-sm font-bold text-text-secondary ml-1 rtl:ml-0 rtl:mr-1">{t.formMessage}</label>
                                                 <textarea
                                                     name="message"
                                                     value={formData.message}
@@ -260,7 +273,7 @@ const Contact: React.FC = () => {
 
                                             {error && (
                                                 <div className="bg-red-500/10 border border-red-500 text-red-500 p-4 rounded-xl flex items-center animate-fadeIn">
-                                                    <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <svg className="w-5 h-5 mr-3 rtl:mr-0 rtl:ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                                     </svg>
                                                     <span className="text-sm font-medium">✗ {error}</span>
@@ -274,14 +287,14 @@ const Contact: React.FC = () => {
                                             >
                                                 {isSubmitting ? (
                                                     <span className="flex items-center justify-center">
-                                                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-bg-primary" fill="none" viewBox="0 0 24 24">
+                                                        <svg className="animate-spin -ml-1 mr-3 rtl:mr-0 rtl:ml-3 h-5 w-5 text-bg-primary" fill="none" viewBox="0 0 24 24">
                                                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                                         </svg>
-                                                        Sending...
+                                                        {language === "ur" ? "بھیجا جا رہا ہے..." : (language === "de" ? "Wird gesendet..." : "Sending...")}
                                                     </span>
                                                 ) : (
-                                                    "Send Message →"
+                                                    `${t.formSubmit} →`
                                                 )}
                                             </button>
                                         </>
@@ -292,15 +305,15 @@ const Contact: React.FC = () => {
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                                 </svg>
                                             </div>
-                                            <h3 className="text-2xl font-bold mb-2">Message Sent!</h3>
+                                            <h3 className="text-2xl font-bold mb-2">{t.contactSuccessTitle}</h3>
                                             <p className="text-text-secondary">
-                                                Thank you for reaching out. I&apos;ll get back to you as soon as possible.
+                                                {t.contactSuccessDesc}
                                             </p>
                                             <button
                                                 onClick={() => setIsSent(false)}
                                                 className="mt-8 text-sm font-bold uppercase tracking-widest hover:text-white transition-colors underline underline-offset-8 decoration-accent-primary/30 hover:decoration-accent-primary"
                                             >
-                                                Send another message
+                                                {t.contactSendAnother}
                                             </button>
                                         </div>
                                     )}

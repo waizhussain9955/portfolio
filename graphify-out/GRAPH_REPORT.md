@@ -1,110 +1,120 @@
-# Graph Report - waiz-new-portfolio-with-chatbot  (2026-04-22)
+# Graph Report - waiz-new-portfolio-with-chatbot  (2026-06-03)
 
 ## Corpus Check
-- 71 files · ~2,822,163 words
+- 120 files · ~2,855,344 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 134 nodes · 107 edges · 8 communities detected
-- Extraction: 73% EXTRACTED · 27% INFERRED · 0% AMBIGUOUS · INFERRED: 29 edges (avg confidence: 0.8)
+- 233 nodes · 277 edges · 10 communities detected
+- Extraction: 78% EXTRACTED · 22% INFERRED · 0% AMBIGUOUS · INFERRED: 62 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
 - [[_COMMUNITY_Community 0|Community 0]]
 - [[_COMMUNITY_Community 1|Community 1]]
 - [[_COMMUNITY_Community 2|Community 2]]
+- [[_COMMUNITY_Community 3|Community 3]]
+- [[_COMMUNITY_Community 4|Community 4]]
 - [[_COMMUNITY_Community 5|Community 5]]
-- [[_COMMUNITY_Community 6|Community 6]]
 - [[_COMMUNITY_Community 8|Community 8]]
-- [[_COMMUNITY_Community 10|Community 10]]
-- [[_COMMUNITY_Community 24|Community 24]]
+- [[_COMMUNITY_Community 11|Community 11]]
+- [[_COMMUNITY_Community 15|Community 15]]
+- [[_COMMUNITY_Community 16|Community 16]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `sql()` - 22 edges
-2. `getChatResponse()` - 10 edges
-3. `POST()` - 6 edges
-4. `runTests()` - 4 edges
-5. `getNeonSql()` - 3 edges
-6. `testChat()` - 3 edges
-7. `test()` - 3 edges
-8. `migrate()` - 3 edges
-9. `handleSubmit()` - 2 edges
-10. `checkUser()` - 2 edges
+1. `sql()` - 28 edges
+2. `GET()` - 23 edges
+3. `POST()` - 22 edges
+4. `showToast()` - 18 edges
+5. `DELETE()` - 15 edges
+6. `PUT()` - 13 edges
+7. `PATCH()` - 10 edges
+8. `getChatResponse()` - 10 edges
+9. `handleDelete()` - 8 edges
+10. `requireAdmin()` - 8 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `sql()` --calls--> `main()`  [INFERRED]
-  lib\neon.ts → scripts\debug-db.ts
-- `POST()` --calls--> `getNeonSql()`  [INFERRED]
-  app\api\chat\route.ts → lib\neon.ts
-- `POST()` --calls--> `sql()`  [INFERRED]
-  app\api\chat\route.ts → lib\neon.ts
-- `sql()` --calls--> `getChatResponse()`  [INFERRED]
-  lib\neon.ts → lib\ai\chatbot.ts
-- `sql()` --calls--> `test()`  [INFERRED]
-  lib\neon.ts → scratch\check-counts.js
+- `middleware()` --calls--> `GET()`  [INFERRED]
+  middleware.ts → app\api\portal\projects\route.ts
+- `GET()` --calls--> `getNeonSql()`  [INFERRED]
+  app\api\portal\projects\route.ts → E:\portfolio-waiz\protfolio\waiz-new-portfolio-with-chatbot\lib\neon.ts
+- `GET()` --calls--> `sql()`  [INFERRED]
+  app\api\portal\projects\route.ts → E:\portfolio-waiz\protfolio\waiz-new-portfolio-with-chatbot\lib\neon.ts
+- `getAuditContext()` --calls--> `GET()`  [INFERRED]
+  lib\audit.ts → app\api\portal\projects\route.ts
+- `getUserIdFromHeaders()` --calls--> `GET()`  [INFERRED]
+  lib\audit.ts → app\api\portal\projects\route.ts
 
 ## Communities
 
 ### Community 0 - "Community 0"
-Cohesion: 0.06
-Nodes (17): test(), checkData(), checkSchema(), checkProjects(), checkProjects(), checkProjects(), listAllImages(), checkResume() (+9 more)
+Cohesion: 0.05
+Nodes (26): getAuditContext(), getUserIdFromHeaders(), logAudit(), test(), checkData(), checkSchema(), checkProjects(), checkProjects() (+18 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.09
-Nodes (9): getChatResponse(), runComprehensiveTests(), debug(), POST(), testChat(), testChat(), runTests(), verifyMemory() (+1 more)
+Cohesion: 0.14
+Nodes (13): fetchPortalData(), handleCopyLink(), handleDelete(), handleSave(), handleSaveChatbot(), handleSaveSiteInfo(), handleUpload(), markProcessed() (+5 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.4
-Nodes (2): checkUser(), handleAuthChange()
+Cohesion: 0.11
+Nodes (8): getChatResponse(), runComprehensiveTests(), debug(), testChat(), testChat(), runTests(), verifyMemory(), verifyBot()
+
+### Community 3 - "Community 3"
+Cohesion: 0.16
+Nodes (2): GET(), POST()
+
+### Community 4 - "Community 4"
+Cohesion: 0.23
+Nodes (11): decodeBase64Url(), encodeBase64Url(), getJwtSecret(), signJWT(), verifyJWT(), verifyToken(), getRequiredRole(), hasRequiredRole() (+3 more)
 
 ### Community 5 - "Community 5"
 Cohesion: 0.4
+Nodes (2): checkUser(), handleAuthChange()
+
+### Community 8 - "Community 8"
+Cohesion: 0.4
 Nodes (1): migrate()
 
-### Community 6 - "Community 6"
+### Community 11 - "Community 11"
 Cohesion: 0.67
 Nodes (1): handleSubmit()
 
-### Community 8 - "Community 8"
-Cohesion: 0.67
-Nodes (1): test()
-
-### Community 10 - "Community 10"
+### Community 15 - "Community 15"
 Cohesion: 0.67
 Nodes (1): extractResume()
 
-### Community 24 - "Community 24"
-Cohesion: 1.0
-Nodes (1): main()
+### Community 16 - "Community 16"
+Cohesion: 0.67
+Nodes (1): runCMSMigration()
 
 ## Knowledge Gaps
-- **Thin community `Community 2`** (6 nodes): `Contact.tsx`, `checkUser()`, `handleAuthChange()`, `handleChange()`, `handleSubmit()`, `triggerAuth()`
+- **Thin community `Community 3`** (17 nodes): `route.ts`, `route.ts`, `route.ts`, `route.ts`, `route.ts`, `route.ts`, `route.ts`, `route.ts`, `route.ts`, `route.ts`, `route.ts`, `route.ts`, `route.ts`, `route.ts`, `route.ts`, `GET()`, `POST()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 5`** (5 nodes): `projects.ts`, `getCwd()`, `migrate()`, `migrate-to-neon.mjs`, `migrate-to-neon.ts`
+- **Thin community `Community 5`** (6 nodes): `checkUser()`, `handleAuthChange()`, `handleChange()`, `handleSubmit()`, `triggerAuth()`, `Contact.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 6`** (3 nodes): `page.tsx`, `page.tsx`, `handleSubmit()`
+- **Thin community `Community 8`** (5 nodes): `projects.ts`, `migrate-to-neon.mjs`, `migrate-to-neon.ts`, `getCwd()`, `migrate()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 8`** (3 nodes): `test-connection.js`, `test-connection.ts`, `test()`
+- **Thin community `Community 11`** (3 nodes): `page.tsx`, `page.tsx`, `handleSubmit()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 10`** (3 nodes): `extractResume()`, `extract-resume.js`, `extract-resume.mjs`
+- **Thin community `Community 15`** (3 nodes): `extract-resume.js`, `extract-resume.mjs`, `extractResume()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 24`** (2 nodes): `main()`, `debug-db.ts`
+- **Thin community `Community 16`** (3 nodes): `runCMSMigration()`, `migrate-cms.mjs`, `migrate-cms.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `sql()` connect `Community 0` to `Community 8`, `Community 1`, `Community 5`, `Community 24`?**
-  _High betweenness centrality (0.203) - this node is a cross-community bridge._
-- **Why does `getChatResponse()` connect `Community 1` to `Community 0`?**
-  _High betweenness centrality (0.111) - this node is a cross-community bridge._
-- **Why does `migrate()` connect `Community 5` to `Community 0`?**
-  _High betweenness centrality (0.028) - this node is a cross-community bridge._
-- **Are the 20 inferred relationships involving `sql()` (e.g. with `POST()` and `getChatResponse()`) actually correct?**
-  _`sql()` has 20 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 9 inferred relationships involving `getChatResponse()` (e.g. with `POST()` and `sql()`) actually correct?**
-  _`getChatResponse()` has 9 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 3 inferred relationships involving `POST()` (e.g. with `getNeonSql()` and `sql()`) actually correct?**
-  _`POST()` has 3 INFERRED edges - model-reasoned connections that need verification._
-- **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.06 - nodes in this community are weakly interconnected._
+- **Why does `sql()` connect `Community 0` to `Community 2`, `Community 3`, `Community 4`, `Community 8`, `Community 16`?**
+  _High betweenness centrality (0.159) - this node is a cross-community bridge._
+- **Why does `getChatResponse()` connect `Community 2` to `Community 0`, `Community 3`?**
+  _High betweenness centrality (0.068) - this node is a cross-community bridge._
+- **Why does `POST()` connect `Community 3` to `Community 0`, `Community 2`, `Community 4`?**
+  _High betweenness centrality (0.063) - this node is a cross-community bridge._
+- **Are the 26 inferred relationships involving `sql()` (e.g. with `GET()` and `DELETE()`) actually correct?**
+  _`sql()` has 26 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 5 inferred relationships involving `GET()` (e.g. with `middleware()` and `getNeonSql()`) actually correct?**
+  _`GET()` has 5 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 9 inferred relationships involving `POST()` (e.g. with `getNeonSql()` and `sql()`) actually correct?**
+  _`POST()` has 9 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 5 inferred relationships involving `DELETE()` (e.g. with `getNeonSql()` and `sql()`) actually correct?**
+  _`DELETE()` has 5 INFERRED edges - model-reasoned connections that need verification._

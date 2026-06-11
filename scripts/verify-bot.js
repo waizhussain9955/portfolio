@@ -23,7 +23,7 @@ async function runVerification() {
     for (const q of questions) {
         console.log(`Q: ${q}`);
         const response = await client.chat.completions.create({
-            model: 'llama3.1-8b',
+            model: 'gpt-oss-120b',
             messages: [
                 { role: 'system', content: `You are Laiba Khan's AI assistant. context: ${resumeText}` },
                 { role: 'user', content: q }

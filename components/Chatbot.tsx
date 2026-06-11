@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare, X, Send, User, Bot, Loader2, ExternalLink, Paperclip } from "lucide-react";
+import { useLanguage } from "./LanguageContext";
 
 interface Message {
     id: string;
@@ -26,7 +27,13 @@ const ProjectMiniCard: React.FC<{ project: ProjectCardData }> = ({ project }) =>
         className="mt-4 glass rounded-2xl overflow-hidden border border-accent-primary/20 bg-bg-card/30"
     >
         <div className="h-32 w-full relative overflow-hidden bg-accent-primary/5">
-            <img src={project.image} alt={project.title} className="w-full h-full object-cover grayscale-[0.2]" />
+            <img 
+                src={project.image} 
+                alt={project.title} 
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover grayscale-[0.2]" 
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-bg-primary/90 to-transparent" />
             <h4 className="absolute bottom-3 left-4 font-heading font-bold text-sm text-text-primary">{project.title}</h4>
         </div>
@@ -87,19 +94,136 @@ const ResumeDownloadButton: React.FC = () => (
     </motion.div>
 );
 
-const MessageBubble: React.FC<{ msg: Message }> = ({ msg }) => {
-    // Split logic for both Project Cards and Resume Button
-    // [PROJECT_CARD: ...] or [RESUME_BUTTON]
-    const parts = msg.text.split(/(\[PROJECT_CARD: (.*?)\]|\[RESUME_BUTTON\])/g).filter(Boolean);
+const renderInlineMarkdown = (text: string) => {
+    if (!text) return "";
+    const inlineRegex = /(\*\*.*?\*\*|\*.*?\*|`.*?`|\[.*?\]\(.*?\))/g;
+    const parts = text.split(inlineRegex);
+    
+    return parts.map((part, index) => {
+        if (part.startsWith("**") && part.endsWith("**")) {
+            return <strong key={index} className="font-bold text-text-primary">{part.slice(2, -2)}</strong>;
+        }
+        if (part.startsWith("*") && part.endsWith("*")) {
+            return <em key={index} className="italic text-text-secondary">{part.slice(1, -1)}</em>;
+        }
+        if (part.startsWith("`") && part.endsWith("`")) {
+            return <code key={index} className="px-1.5 py-0.5 bg-white/10 rounded font-mono text-xs text-accent-light">{part.slice(1, -1)}</code>;
+        }
+        if (part.startsWith("[") && part.includes("](")) {
+            const match = part.match(/\[(.*?)\]\((.*?)\)/);
+            if (match) {
+                return (
+                    <a
+                        key={index}
+                        href={match[2]}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-accent-primary hover:underline font-bold inline-flex items-center gap-0.5"
+                    >
+                        {match[1]} <ExternalLink className="w-3 h-3 inline" />
+                    </a>
+                );
+            }
+        }
+        return part;
+    });
+};
 
-    // Check if any project cards or resume button exist in this message
-    const hasProjectCard = parts.some(p => p.startsWith("[PROJECT_CARD:"));
-    const hasResumeButton = parts.some(p => p === "[RESUME_BUTTON]");
-    const hasSpecialContent = hasProjectCard || hasResumeButton;
+interface MessageBubbleProps {
+    msg: Message;
+    onRetry?: () => void;
+}
+
+const MessageBubble: React.FC<MessageBubbleProps> = ({ msg, onRetry }) => {
+    const [copied, setCopied] = useState(false);
+    
+    const handleCopy = () => {
+        const textToCopy = msg.text
+            .replace(/\[PROJECT_CARD:.*?\]/g, '')
+            .replace(/\[RESUME_BUTTON\]/g, 'Waiz Hussain\'s Resume')
+            .trim();
+        navigator.clipboard.writeText(textToCopy);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+
+    const parseMarkdown = (text: string) => {
+        const blocks = text.split(/(```[\s\S]*?```)/g);
+        
+        return blocks.map((block, idx) => {
+            if (block.startsWith("```")) {
+                const match = block.match(/```(\w*)\n([\s\S]*?)```/);
+                const lang = match ? match[1] : "";
+                const code = match ? match[2] : block.slice(3, -3);
+                return (
+                    <div key={idx} className="my-3 rounded-xl overflow-hidden border border-white/10 bg-black/40 w-full">
+                        <div className="flex justify-between items-center px-4 py-1.5 bg-white/5 border-b border-white/5 text-[10px] text-text-secondary font-mono">
+                            <span>{lang || "code"}</span>
+                            <button
+                                onClick={() => {
+                                    navigator.clipboard.writeText(code.trim());
+                                    showToastFromWindow("Code copied to clipboard!");
+                                }}
+                                className="hover:text-accent-primary transition-colors cursor-pointer"
+                            >
+                                Copy
+                            </button>
+                        </div>
+                        <pre className="p-4 overflow-x-auto text-xs font-mono leading-relaxed text-text-primary scrollbar-hide max-w-full">
+                            <code>{code.trim()}</code>
+                        </pre>
+                    </div>
+                );
+            }
+            
+            const subParts = block.split(/(\[PROJECT_CARD: (.*?)\]|\[RESUME_BUTTON\])/g).filter(Boolean);
+            const hasProjectCard = subParts.some(p => p.startsWith("[PROJECT_CARD:"));
+            const hasResumeButton = subParts.some(p => p === "[RESUME_BUTTON]");
+            const hasSpecialContent = hasProjectCard || hasResumeButton;
+            
+            return subParts.map((part, subIdx) => {
+                if (part === "[RESUME_BUTTON]") {
+                    return <ResumeDownloadButton key={`${idx}-${subIdx}`} />;
+                } else if (part.startsWith("[PROJECT_CARD:")) {
+                    const cardContent = part.replace("[PROJECT_CARD: ", "").replace("]", "");
+                    const [title, desc, image, live, github] = cardContent.split(' | ').map(p => p.trim());
+                    const cardData: ProjectCardData = { title, desc, image, liveLink: live, githubLink: github };
+                    return <ProjectMiniCard key={`${idx}-${subIdx}`} project={cardData} />;
+                } else if (!hasSpecialContent && !part.includes("[PROJECT_CARD:") && part !== "[RESUME_BUTTON]") {
+                    const lines = part.split("\n");
+                    return (
+                        <span key={`${idx}-${subIdx}`}>
+                            {lines.map((line, lineIdx) => {
+                                if (line.trim().startsWith("- ") || line.trim().startsWith("* ")) {
+                                    return (
+                                        <span key={lineIdx} className="block pl-4 py-0.5 relative text-text-secondary">
+                                            <span className="absolute left-1 top-2.5 w-1 h-1 rounded-full bg-accent-primary" />
+                                            {renderInlineMarkdown(line.trim().slice(2))}
+                                        </span>
+                                    );
+                                }
+                                return (
+                                    <span key={lineIdx} className="block min-h-[1rem]">
+                                        {renderInlineMarkdown(line)}
+                                    </span>
+                                );
+                            })}
+                        </span>
+                    );
+                }
+                return null;
+            });
+        });
+    };
+
+    // Helper window toast dispatch
+    const showToastFromWindow = (msg: string) => {
+        window.dispatchEvent(new CustomEvent("show-chatbot-toast", { detail: msg }));
+    };
 
     return (
-        <div className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
-            <div className={`flex gap-2 max-w-[98%] ${msg.sender === "user" ? "flex-row-reverse" : "flex-row"}`}>
+        <div className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"} px-2`}>
+            <div className={`flex gap-2 max-w-[95%] sm:max-w-[85%] ${msg.sender === "user" ? "flex-row-reverse" : "flex-row"}`}>
                 <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
                     msg.sender === "user" 
                     ? "bg-accent-primary text-bg-primary" 
@@ -107,30 +231,32 @@ const MessageBubble: React.FC<{ msg: Message }> = ({ msg }) => {
                 }`}>
                     {msg.sender === "user" ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
                 </div>
-                <div className="flex flex-col gap-2 min-w-0">
-                    <div className={`py-3 px-4 rounded-2xl text-sm leading-relaxed overflow-hidden break-words whitespace-pre-wrap ${
+                <div className="flex flex-col gap-1 min-w-0 flex-1">
+                    <div className={`py-3 px-4 rounded-2xl text-sm leading-relaxed overflow-hidden break-words ${
                         msg.sender === "user"
                         ? "bg-accent-primary text-bg-primary font-medium"
                         : "bg-white/5 border border-white/10 text-text-secondary"
                     }`}>
-                        {parts.map((part, index) => {
-                            if (part === "[RESUME_BUTTON]") {
-                                return <ResumeDownloadButton key={index} />;
-                            } else if (part.startsWith("[PROJECT_CARD:")) {
-                                const cardContent = part.replace("[PROJECT_CARD: ", "").replace("]", "");
-                                const [title, desc, image, live, github] = cardContent.split(' | ').map(p => p.trim());
-                                const cardData: ProjectCardData = { title, desc, image, liveLink: live, githubLink: github };
-                                return <ProjectMiniCard key={index} project={cardData} />;
-                            } else if (!hasSpecialContent && !part.includes("[PROJECT_CARD:") && part !== "[RESUME_BUTTON]") {
-                                // Only show plain text if there are NO project cards or resume buttons in this message
-                                return <span key={index}>{part}</span>;
-                            } else if (hasSpecialContent && !part.startsWith("[PROJECT_CARD:") && part !== "[RESUME_BUTTON]") {
-                                // Skip text when special content (project cards / resume) is present
-                                return null;
-                            }
-                            return null;
-                        })}
+                        {parseMarkdown(msg.text)}
                     </div>
+                    {msg.sender === "bot" && (
+                        <div className="flex items-center gap-3 mt-1 ml-1 text-[10px] text-text-muted">
+                            <button
+                                onClick={handleCopy}
+                                className="hover:text-accent-primary flex items-center gap-1 transition-colors cursor-pointer"
+                            >
+                                {copied ? "✓ Copied" : "Copy"}
+                            </button>
+                            {msg.text.includes(" glitch") && onRetry && (
+                                <button
+                                    onClick={onRetry}
+                                    className="text-accent-primary hover:underline flex items-center gap-1 cursor-pointer font-bold"
+                                >
+                                    ↻ Retry Query
+                                </button>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
@@ -138,16 +264,35 @@ const MessageBubble: React.FC<{ msg: Message }> = ({ msg }) => {
 };
 
 const Chatbot: React.FC = () => {
+    const { t, language } = useLanguage();
     const [isOpen, setIsOpen] = useState(false);
     const [input, setInput] = useState("");
-    const [messages, setMessages] = useState<Message[]>([
-        {
-            id: "1",
-            text: "Hi! I'm Waiz's AI assistant. 🚀 Ask me about his projects with 'Next.js' or 'Flutter' and I'll show you his best work!",
-            sender: "bot",
-            timestamp: new Date(),
-        },
-    ]);
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [lastQuery, setLastQuery] = useState("");
+    const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+    useEffect(() => {
+        setMessages([
+            {
+                id: "1",
+                text: t.botGreeting,
+                sender: "bot",
+                timestamp: new Date(),
+            },
+        ]);
+    }, [language, t.botGreeting]);
+
+    // Handle custom toast event
+    useEffect(() => {
+        const handleToast = (e: Event) => {
+            const msg = (e as CustomEvent).detail;
+            setToastMessage(msg);
+            setTimeout(() => setToastMessage(null), 2500);
+        };
+        window.addEventListener("show-chatbot-toast", handleToast);
+        return () => window.removeEventListener("show-chatbot-toast", handleToast);
+    }, []);
+
     const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -159,18 +304,22 @@ const Chatbot: React.FC = () => {
         scrollToBottom();
     }, [messages]);
 
-    const handleSend = async () => {
-        if (!input.trim() || isLoading) return;
+    const handleSend = async (customMessage?: string) => {
+        const textToSend = (typeof customMessage === "string" ? customMessage : input).trim();
+        if (!textToSend || isLoading) return;
 
         const userMessage: Message = {
             id: Date.now().toString(),
-            text: input.trim(),
+            text: textToSend,
             sender: "user",
             timestamp: new Date(),
         };
 
         setMessages((prev) => [...prev, userMessage]);
-        setInput("");
+        if (typeof customMessage !== "string") {
+            setInput("");
+        }
+        setLastQuery(textToSend);
         setIsLoading(true);
 
         const chatHistory = messages.slice(-10).map(msg => ({
@@ -187,6 +336,26 @@ const Chatbot: React.FC = () => {
                     history: chatHistory
                 }),
             });
+
+            // Track chat query in background analytics
+            try {
+                let sessionId = sessionStorage.getItem("visitor_session_id");
+                if (!sessionId) {
+                    sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                    sessionStorage.setItem("visitor_session_id", sessionId);
+                }
+                fetch("/api/analytics/track", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        event_type: "chat_query",
+                        page_url: window.location.pathname,
+                        session_id: sessionId,
+                        referrer: document.referrer,
+                        metadata: { query: userMessage.text }
+                    })
+                }).catch(() => {});
+            } catch (_) {}
 
             const data = await response.json();
 
@@ -216,17 +385,23 @@ const Chatbot: React.FC = () => {
     };
 
     return (
-        <div className="fixed bottom-6 right-6 z-50">
+        <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50">
+            {/* Action feedback toast */}
+            {toastMessage && (
+                <div className="fixed bottom-24 right-6 z-50 bg-accent-primary/10 border border-accent-primary/30 text-accent-primary px-4 py-2 rounded-xl text-xs font-bold animate-fadeIn shadow-lg">
+                    {toastMessage}
+                </div>
+            )}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
                         initial={{ opacity: 0, scale: 0.8, y: 50, transformOrigin: "bottom right" }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.8, y: 50 }}
-                        className="mb-4 w-[350px] md:w-[430px] h-[450px] md:h-[550px] flex flex-col bg-[#0d1117] rounded-xl overflow-hidden shadow-[0_20px_50px_var(--color-glow)] border border-accent-primary/20"
+                        className="mb-4 w-[calc(100vw-2rem)] sm:w-[380px] md:w-[430px] h-[480px] md:h-[550px] max-h-[calc(100vh-6.5rem)] flex flex-col bg-[#0d1117] rounded-xl overflow-hidden shadow-[0_20px_50px_var(--color-glow)] border border-accent-primary/20"
                     >
                         {/* Header */}
-                        <div className="px-6 py-4 bg-gradient-to-r from-accent-primary/20 to-teal-500/10 border-b border-accent-primary/10 flex items-center justify-between">
+                        <div className="px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-accent-primary/20 to-teal-500/10 border-b border-accent-primary/10 flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-accent-primary to-teal-400 flex items-center justify-center shadow-md">
                                     <span className="text-[#0d1117] font-black text-sm tracking-tight leading-none">WH</span>
@@ -255,7 +430,7 @@ const Chatbot: React.FC = () => {
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                 >
-                                    <MessageBubble msg={msg} />
+                                    <MessageBubble msg={msg} onRetry={() => handleSend(lastQuery)} />
                                 </motion.div>
                             ))}
                             {isLoading && (
@@ -274,7 +449,7 @@ const Chatbot: React.FC = () => {
                         </div>
 
                         {/* Input */}
-                        <div className="p-4 border-t border-white/5">
+                        <div className="p-3 sm:p-4 border-t border-white/5">
                             <div
                                 className="relative flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] transition-all duration-200"
                                 style={{ boxShadow: input ? '0 0 0 1.5px var(--color-accent-primary)' : 'none' }}
@@ -294,7 +469,7 @@ const Chatbot: React.FC = () => {
                                     }}
                                     placeholder="Ask a question..."
                                     rows={1}
-                                    className="w-full bg-transparent resize-none py-3.5 px-4 text-sm focus:outline-none placeholder:text-text-muted text-text-primary leading-relaxed scrollbar-hide"
+                                    className="w-full bg-transparent resize-none py-2.5 sm:py-3.5 px-3 sm:px-4 text-sm focus:outline-none placeholder:text-text-muted text-text-primary leading-relaxed scrollbar-hide"
                                     style={{ minHeight: '46px', maxHeight: '120px' }}
                                 />
                                 <div className="flex items-center justify-between px-3 pb-2.5">
@@ -306,7 +481,7 @@ const Chatbot: React.FC = () => {
                                         <Paperclip className="w-4 h-4" />
                                     </button>
                                     <button
-                                        onClick={handleSend}
+                                        onClick={() => handleSend()}
                                         disabled={!input.trim() || isLoading}
                                         className="p-2 rounded-lg transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
                                         style={{

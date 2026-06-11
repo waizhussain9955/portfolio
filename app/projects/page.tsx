@@ -1,14 +1,26 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProjectCard from "@/components/ProjectCard";
-import { projects } from "@/lib/data/projects";
+import { projects as fallbackProjects } from "@/lib/data/projects";
 import ParticleBackground from "@/components/ParticleBackground";
 import ScrollAnimation from "@/components/ScrollAnimation";
 
 const ProjectsPage = () => {
+    const [projects, setProjects] = useState(fallbackProjects);
+
+    useEffect(() => {
+        fetch("/api/public/projects", { cache: "no-store" })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.projects?.length) setProjects(data.projects);
+            })
+            .catch(() => setProjects(fallbackProjects));
+    }, []);
+
     return (
         <main className="relative min-h-screen selection:bg-accent-primary selection:text-bg-primary">
             <ParticleBackground />
