@@ -5,8 +5,8 @@ import Link from "next/link";
 
 const Footer: React.FC = () => {
     return (
-        <footer className="bg-bg-primary pt-20 border-t border-border/50">
-            <div className="container mx-auto px-6 pb-20">
+        <footer className="bg-bg-primary pt-16 sm:pt-20 border-t border-border/50">
+            <div className="container mx-auto px-4 sm:px-6 pb-16 sm:pb-20">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
                     {/* Col 1 */}
                     <div className="space-y-6">
@@ -89,8 +89,8 @@ const Footer: React.FC = () => {
                 </div>
             </div>
 
-            <div className="border-t border-border/30 bg-bg-primary/50 py-8">
-                <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-xs text-text-secondary font-medium tracking-wider space-y-4 md:space-y-0">
+            <div className="border-t border-border/30 bg-bg-primary/50 py-6">
+                <div className="container mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-center text-xs text-text-secondary font-medium tracking-wider space-y-2 md:space-y-0 text-center">
                     <p>© 2026 WAIZ HUSSAIN</p>
                     <p className="flex items-center">
                         DESIGNED & BUILT WITH <span className="text-accent-primary mx-1.5 animate-pulse text-sm">❤️</span> BY WAIZ HUSSAIN

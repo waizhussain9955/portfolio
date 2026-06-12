@@ -23,8 +23,8 @@ const highlights = [
 
 const Highlights: React.FC = () => {
     return (
-        <section className="py-12 border-y border-border/10 bg-bg-secondary/30">
-            <div className="container mx-auto px-6">
+        <section className="py-10 sm:py-12 border-y border-border/10 bg-bg-secondary/30">
+            <div className="container mx-auto px-4 sm:px-6">
                 <ScrollAnimation delay={200}>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
                         {highlights.map((item, index) => (

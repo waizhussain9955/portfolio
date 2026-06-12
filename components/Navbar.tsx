@@ -145,7 +145,7 @@ const Navbar: React.FC = () => {
                     : "py-6 bg-transparent"
                     }`}
             >
-                <div className="container mx-auto px-4 md:px-6 flex items-center">
+                <div className="container mx-auto px-3 sm:px-4 md:px-6 flex items-center">
                     {/* Logo - Left */}
                     <Link href="/" className="text-3xl font-heading font-extrabold tracking-tighter shrink-0">
                         <span className="text-gradient">WH</span>
@@ -233,7 +233,7 @@ const Navbar: React.FC = () => {
                     </div>
 
                     {/* Mobile Toggle */}
-                    <div className="flex items-center space-x-4 rtl:space-x-reverse md:hidden">
+                    <div className="flex items-center space-x-2 rtl:space-x-reverse md:hidden ml-auto">
                         {user && (
                             <button
                                 className="w-8 h-8 rounded-full bg-accent-primary/20 border border-accent-primary flex items-center justify-center text-accent-primary text-xs font-bold"
@@ -269,7 +269,7 @@ const Navbar: React.FC = () => {
                                 setMobileMenuOpen(false);
                             }
                         }}
-                        className={`fixed inset-0 bg-bg-primary transition-transform duration-500 ease-in-out flex flex-col items-center justify-start py-20 space-y-6 sm:space-y-8 text-xl sm:text-2xl font-heading overflow-y-auto ${mobileMenuOpen ? "translate-y-0" : "-translate-y-full"
+                        className={`fixed inset-0 bg-bg-primary transition-transform duration-500 ease-in-out flex flex-col items-center justify-start py-20 space-y-6 sm:space-y-8 text-xl sm:text-2xl font-heading overflow-y-auto overflow-x-hidden ${mobileMenuOpen ? "translate-y-0" : "-translate-y-full"
                             }`}
                     >
                         {navLinks.map((link, idx) => (

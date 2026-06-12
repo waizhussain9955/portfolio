@@ -75,8 +75,8 @@ const Skills: React.FC = () => {
     const hiddenCount = skills.length - INITIAL_COUNT;
 
     return (
-        <section id="skills" className="py-24 bg-bg-secondary/30 relative" ref={sectionRef}>
-            <div className="container mx-auto px-6">
+        <section id="skills" className="py-16 sm:py-24 bg-bg-secondary/30 relative overflow-hidden" ref={sectionRef}>
+            <div className="container mx-auto px-4 sm:px-6">
                 {/* Header */}
                 <ScrollAnimation className="text-center mb-16">
                     <div className="flex items-center justify-center space-x-2 rtl:space-x-reverse text-accent-primary mb-4">

@@ -99,11 +99,11 @@ const Hero: React.FC = () => {
             id="home"
             className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24"
         >
-            {/* Background Mesh Gradient Blobs */}
-            <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-accent-primary/20 blur-[120px] rounded-full animate-pulse-glow -z-10" />
-            <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-accent-secondary/20 blur-[150px] rounded-full animate-float -z-10" />
+            {/* Background Mesh Gradient Blobs — clamped so they never overflow */}
+            <div className="absolute top-1/4 left-1/4 w-[min(500px,50vw)] h-[min(500px,50vw)] bg-accent-primary/20 blur-[120px] rounded-full animate-pulse-glow -z-10 pointer-events-none" />
+            <div className="absolute bottom-1/4 right-1/4 w-[min(600px,50vw)] h-[min(600px,50vw)] bg-accent-secondary/20 blur-[150px] rounded-full animate-float -z-10 pointer-events-none" />
 
-            <div className="container mx-auto px-6 text-center z-10">
+            <div className="container mx-auto px-4 sm:px-6 text-center z-10">
                 <ScrollAnimation delay={200}>
                     <div className="inline-flex items-center space-x-2 rtl:space-x-reverse px-4 py-1.5 rounded-full glass border border-border mb-8 animate-fadeIn">
                         <span className="relative flex h-2 w-2">

@@ -115,8 +115,8 @@ const Contact: React.FC = () => {
     };
 
     return (
-        <section id="contact" className="py-24 relative">
-            <div className="container mx-auto px-6">
+        <section id="contact" className="py-16 sm:py-24 relative overflow-hidden">
+            <div className="container mx-auto px-4 sm:px-6">
                 <div className="flex flex-col lg:flex-row gap-16">
                     {/* Left Column: Info */}
                     <div className="lg:w-1/2">
@@ -132,41 +132,41 @@ const Contact: React.FC = () => {
                                 {t.contactDescriptionLeft}
                             </p>
 
-                            <div className="space-y-8 mb-12">
-                                <div className="flex items-center space-x-6 rtl:space-x-reverse group">
-                                    <div className="w-12 h-12 glass rounded-2xl flex items-center justify-center text-accent-primary group-hover:scale-110 transition-transform">
-                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="space-y-6 mb-12">
+                                <div className="flex items-center space-x-3 sm:space-x-6 rtl:space-x-reverse group">
+                                    <div className="w-10 h-10 sm:w-12 sm:h-12 glass rounded-2xl flex items-center justify-center text-accent-primary group-hover:scale-110 transition-transform flex-shrink-0">
+                                        <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                         </svg>
                                     </div>
-                                    <div>
+                                    <div className="min-w-0 flex-1">
                                         <h4 className="text-xs font-bold uppercase tracking-widest text-text-secondary mb-1">{t.contactLabelEmail}</h4>
-                                        <p className="text-base sm:text-lg font-medium break-all">waizhussain9955@gmail.com</p>
+                                        <p className="text-sm sm:text-base font-medium break-all">waizhussain9955@gmail.com</p>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center space-x-6 rtl:space-x-reverse group">
-                                    <div className="w-12 h-12 glass rounded-2xl flex items-center justify-center text-accent-secondary group-hover:scale-110 transition-transform">
-                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div className="flex items-center space-x-3 sm:space-x-6 rtl:space-x-reverse group">
+                                    <div className="w-10 h-10 sm:w-12 sm:h-12 glass rounded-2xl flex items-center justify-center text-accent-secondary group-hover:scale-110 transition-transform flex-shrink-0">
+                                        <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                         </svg>
                                     </div>
-                                    <div>
+                                    <div className="min-w-0 flex-1">
                                         <h4 className="text-xs font-bold uppercase tracking-widest text-text-secondary mb-1">{t.contactLabelLocation}</h4>
-                                        <p className="text-base sm:text-lg font-medium">{t.badgeLocation}</p>
+                                        <p className="text-sm sm:text-base font-medium">{t.badgeLocation}</p>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center space-x-6 rtl:space-x-reverse group">
-                                    <div className="w-12 h-12 glass rounded-2xl flex items-center justify-center text-accent-light group-hover:scale-110 transition-transform">
-                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div className="flex items-center space-x-3 sm:space-x-6 rtl:space-x-reverse group">
+                                    <div className="w-10 h-10 sm:w-12 sm:h-12 glass rounded-2xl flex items-center justify-center text-accent-light group-hover:scale-110 transition-transform flex-shrink-0">
+                                        <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                         </svg>
                                     </div>
-                                    <div>
+                                    <div className="min-w-0 flex-1">
                                         <h4 className="text-xs font-bold uppercase tracking-widest text-text-secondary mb-1">{t.contactLabelAvailability}</h4>
-                                        <p className="text-base sm:text-lg font-medium">{t.contactValueAvailability}</p>
+                                        <p className="text-sm sm:text-base font-medium">{t.contactValueAvailability}</p>
                                     </div>
                                 </div>
                             </div>

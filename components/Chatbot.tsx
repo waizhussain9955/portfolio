@@ -385,10 +385,10 @@ const Chatbot: React.FC = () => {
     };
 
     return (
-        <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50">
+        <div className="fixed bottom-4 right-3 sm:right-4 md:bottom-6 md:right-6 z-50">
             {/* Action feedback toast */}
             {toastMessage && (
-                <div className="fixed bottom-24 right-6 z-50 bg-accent-primary/10 border border-accent-primary/30 text-accent-primary px-4 py-2 rounded-xl text-xs font-bold animate-fadeIn shadow-lg">
+                <div className="fixed bottom-24 right-3 sm:right-6 z-50 bg-accent-primary/10 border border-accent-primary/30 text-accent-primary px-4 py-2 rounded-xl text-xs font-bold animate-fadeIn shadow-lg max-w-[calc(100vw-1.5rem)]">
                     {toastMessage}
                 </div>
             )}
@@ -398,7 +398,7 @@ const Chatbot: React.FC = () => {
                         initial={{ opacity: 0, scale: 0.8, y: 50, transformOrigin: "bottom right" }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.8, y: 50 }}
-                        className="mb-4 w-[calc(100vw-2rem)] sm:w-[380px] md:w-[430px] h-[480px] md:h-[550px] max-h-[calc(100vh-6.5rem)] flex flex-col bg-[#0d1117] rounded-xl overflow-hidden shadow-[0_20px_50px_var(--color-glow)] border border-accent-primary/20"
+                        className="mb-4 w-[calc(100vw-1.5rem)] max-w-[430px] sm:w-[380px] md:w-[430px] h-[480px] md:h-[550px] max-h-[calc(100vh-6.5rem)] flex flex-col bg-[#0d1117] rounded-xl overflow-hidden shadow-[0_20px_50px_var(--color-glow)] border border-accent-primary/20"
                     >
                         {/* Header */}
                         <div className="px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-accent-primary/20 to-teal-500/10 border-b border-accent-primary/10 flex items-center justify-between">

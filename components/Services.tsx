@@ -97,8 +97,8 @@ const Services: React.FC = () => {
   if (services.length === 0) return null;
 
   return (
-    <section id="services" className="py-24 relative">
-      <div className="container mx-auto px-6">
+    <section id="services" className="py-16 sm:py-24 relative overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6">
         <ScrollAnimation className="mb-16">
           <div className="flex items-center space-x-2 rtl:space-x-reverse text-accent-primary mb-4">
             <span className="w-8 h-[1px] bg-accent-primary"></span>

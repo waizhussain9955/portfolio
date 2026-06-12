@@ -8,8 +8,8 @@ const About: React.FC = () => {
     const { t } = useLanguage();
 
     return (
-        <section id="about" className="py-24 relative overflow-hidden">
-            <div className="container mx-auto px-6">
+        <section id="about" className="py-16 sm:py-24 relative overflow-hidden">
+            <div className="container mx-auto px-4 sm:px-6">
                 <div className="flex flex-col lg:flex-row items-center gap-16">
                     {/* Left Column: Content */}
                     <div className="lg:w-7/12">
@@ -68,7 +68,7 @@ const About: React.FC = () => {
                                 <div className="absolute inset-0 -m-4 rounded-full bg-gradient-primary animate-spin-slow blur-md opacity-30" />
 
                                 {/* Avatar Wrapper */}
-                                <div className="relative w-[200px] h-[200px] sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-full border-4 border-bg-secondary flex items-center justify-center bg-bg-secondary overflow-hidden">
+                                <div className="relative w-[160px] h-[160px] xs:w-[180px] xs:h-[180px] sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-full border-4 border-bg-secondary flex items-center justify-center bg-bg-secondary overflow-hidden">
                                     <span className="text-6xl sm:text-7xl md:text-8xl font-heading font-extrabold text-gradient pointer-events-none">
                                         WH
                                     </span>
