@@ -152,7 +152,7 @@ const Navbar: React.FC = () => {
                     </Link>
 
                     {/* Desktop Nav Links - Centered (flex-1) */}
-                    <div className="hidden md:flex flex-1 items-center justify-center gap-5 lg:gap-7 xl:gap-8 rtl:gap-reverse">
+                    <div className="hidden lg:flex flex-1 items-center justify-center gap-5 xl:gap-7 2xl:gap-8 rtl:gap-reverse">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.name}
@@ -168,8 +168,8 @@ const Navbar: React.FC = () => {
                         ))}
                     </div>
 
-                    {/* Right Controls */}
-                    <div className="hidden md:flex items-center gap-2 lg:gap-3 shrink-0 ml-2">
+                    {/* Right Controls - Desktop only */}
+                    <div className="hidden lg:flex items-center gap-2 xl:gap-3 shrink-0 ml-2">
                         <LanguageToggle />
                         <ThemeToggle />
                         {user ? (
@@ -232,8 +232,8 @@ const Navbar: React.FC = () => {
                         </Link>
                     </div>
 
-                    {/* Mobile Toggle */}
-                    <div className="flex items-center space-x-2 rtl:space-x-reverse md:hidden ml-auto">
+                    {/* Mobile Toggle — shown below lg (1024px) */}
+                    <div className="flex items-center space-x-2 rtl:space-x-reverse lg:hidden ml-auto">
                         {user && (
                             <button
                                 className="w-8 h-8 rounded-full bg-accent-primary/20 border border-accent-primary flex items-center justify-center text-accent-primary text-xs font-bold"
